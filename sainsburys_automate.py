@@ -14,7 +14,7 @@ import datetime
 import smtplib
 from email.message import EmailMessage
 from pyvirtualdisplay import Display
-import time
+import time as TIME
 import sys
 
 
@@ -192,4 +192,4 @@ while True:
 
     print("Done")
     driver.quit()
-    time.sleep(5)
+    TIME.sleep(5)
