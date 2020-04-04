@@ -173,11 +173,17 @@ while True:
     if date != "":
         date = date + " " + str(datetime.datetime.now().year)
         
-        send_mail(receiver_address="randeep@springsoftware.co.uk", sender_address="pycollins2019@gmail.com", 
+        try:
+            send_mail(receiver_address="randeep@springsoftware.co.uk", sender_address="pycollins2019@gmail.com", 
                   content="There is a new slot on Sainsburys for date: " + str(date))
 
-        send_mail(receiver_address="pycollins2019@gmail.com", sender_address="pycollins2019@gmail.com", 
+            send_mail(receiver_address="pycollins2019@gmail.com", sender_address="pycollins2019@gmail.com", 
                   content="There is a new slot on Sainsburys for date: " + str(date))
+            
+            
+        except Exception as e:
+            print(e)
+            pass
 
         
 
