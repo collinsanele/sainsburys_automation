@@ -18,58 +18,54 @@ import time as TIME
 import sys
 
 
+# Function to send email
+def send_mail(receiver_address, sender_address, content):
+    msg = EmailMessage()
+
+    msg['Subject'] = "New Slot On Sainsburys"
+    msg['From'] = sender_address
+    msg['To'] = receiver_address
+
+    msg.set_content(content)
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+        smtp.login(msg["From"], password)
+        smtp.send_message(msg)
+
+    print("Slot Found")    
+    print("Sent")
+
+
+
 
 print("Starting for zipcode " + str(sys.argv[1]))
+
+
+Important
+display = Display(visible=0, size=(800, 600))
+display.start()
+
+capa = DesiredCapabilities.CHROME
+capa["pageLoadStrategy"] = "none"
+
+driver = webdriver.Chrome(executable_path='/usr/lib/chromium-browser/chromedriver', desired_capabilities=capa)
+
+#driver = webdriver.Chrome(executable_path='chromedriver.exe', desired_capabilities=capa)
+
+password = str(sys.argv[2]).strip()
+    
+zip_code = str(sys.argv[1]).strip().lower()
 
 
 
 while True:
     
-    password = str(sys.argv[2]).strip()
-    
-    zip_code = str(sys.argv[1]).strip().lower()
-
-
-
-
-    # Function to send email
-    def send_mail(receiver_address, sender_address, content):
-        msg = EmailMessage()
-
-        msg['Subject'] = "New Slot On Sainsburys"
-        msg['From'] = sender_address
-        msg['To'] = receiver_address
-
-        msg.set_content(content)
-
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-            smtp.login(msg["From"], password)
-            smtp.send_message(msg)
-
-        print("Slot Found")    
-        print("Sent")
-
-
-
-
-
-    #Important
-    display = Display(visible=0, size=(800, 600))
-    display.start()
-
-    capa = DesiredCapabilities.CHROME
-    capa["pageLoadStrategy"] = "none"
-
-    driver = webdriver.Chrome(executable_path='/usr/lib/chromium-browser/chromedriver', desired_capabilities=capa)
-
     print("starting...")
-
-    wait = WebDriverWait(driver, 65)
 
 
     try:
         driver.get("http://www.sainsburys.co.uk/shop/gb/groceries")
-
+        wait = WebDriverWait(driver, 65)
         wait.until(EC.presence_of_element_located((By.ID, '#postCode')))
         driver.execute_script("window.stop();")
 
@@ -80,7 +76,7 @@ while True:
 
     try:
         driver.find_element_by_id("postCode").send_keys(zip_code, Keys.ENTER)
-        WebDriverWait(driver, 10).until(ec.visibility_of_element_located((By.ID, "collectBookSlotBtn")))
+        WebDriverWait(driver, 60).until(ec.visibility_of_element_located((By.ID, "collectBookSlotBtn")))
 
     except Exception as e:
         print(e)
@@ -91,7 +87,7 @@ while True:
 
         choose_loc_btn = driver.find_element_by_id("collectBookSlotBtn")
         driver.execute_script("arguments[0].click();", choose_loc_btn)
-        WebDriverWait(driver, 10).until(ec.visibility_of_element_located((By.CLASS_NAME, "actions")))
+        WebDriverWait(driver, 40).until(ec.visibility_of_element_located((By.CLASS_NAME, "actions")))
 
     except Exception as e:
         print(e)
@@ -176,20 +172,19 @@ while True:
 
     if date != "":
         date = date + " " + str(datetime.datetime.now().year)
-
-
-
-
-    if date != "":
+        
         send_mail(receiver_address="randeep@springsoftware.co.uk", sender_address="pycollins2019@gmail.com", 
                   content="There is a new slot on Sainsburys for date: " + str(date))
 
         send_mail(receiver_address="pycollins2019@gmail.com", sender_address="pycollins2019@gmail.com", 
                   content="There is a new slot on Sainsburys for date: " + str(date))
 
+        
+
 
 
 
     print("Done")
-    driver.quit()
+    driver.delete_all_cookies()
+    #driver.quit()
     TIME.sleep(5)
