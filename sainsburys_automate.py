@@ -41,7 +41,7 @@ def send_mail(receiver_address, sender_address, content):
 print("Starting for zipcode " + str(sys.argv[1]))
 
 
-Important
+#Important
 display = Display(visible=0, size=(800, 600))
 display.start()
 
